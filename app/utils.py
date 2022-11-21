@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import seaborn
 
 def load_data(filepath):
     """Loads in data from the filepath of a given csv
@@ -28,4 +29,5 @@ def normalise_data(df):
     
     
 if __name__ == '__main__':
-    load_data('./data/train.csv')
+    df = load_data('./data/train.csv')
+    seaborn.pairplot(df)
