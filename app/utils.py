@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-import sklearn
+from datetime import datetime
+import json
 
 def load_data(filepath):
     """Loads in data from the filepath of a given csv
@@ -30,6 +31,35 @@ def normalise_data(df):
     df['var2'] = enc.fit_transform(df['var2'].values)
     return df
 
+def get_time_series_batches(df):
+    """create time series batches
+
+    Args:
+        df (pandas.Dataframe): input
+        
+    Return:
+        series (dict): a dict containing batches of data by year / mo
+        gives an easy utility to be able to grab a batch by year and month e.g. : 
+        `time_series_batches['2015'].get('11')`
+    """
+    m_df = df.copy()
+
+    m_df['year'] = pd.to_datetime(m_df['datetime']).dt.to_period('Y')
+    m_df['month'] = pd.to_datetime(m_df['datetime']).dt.to_period('M')
+
+    time_series_batches = dict()
+    for year in m_df['year'].unique():
+        months = dict()
+        for month in m_df['month'].dt.month.unique():
+            if month < 10:
+                month = f"0{month}"
+            mo_data = df[df['datetime'].str.contains(f"{year}-{month}")]
+            if not mo_data.empty:
+                months[f"{month}"] = mo_data
+        time_series_batches[f"{year}"] = months
+    
+    return time_series_batches
+
 def split_attrs_labels(df):
     """Processes the dataFrame and returns data and labels in npArrays
 
@@ -39,11 +69,6 @@ def split_attrs_labels(df):
     Returns:
         X, Y: returns result of sklearn.model_selection.train_test_split
     """
-    # The shape of our data: 
-    # ID,datetime,temperature,var1,pressure,windspeed,var2,electricity_consumption
-    # ID is not really required here we'll drop that, split the data from datetime to var2
-    # if elec_consumption exists we'll return it as y otherwise y is an empty array
-    
     X = df.iloc[:,1:7].to_numpy()
     Y = df.iloc[:,7:].to_numpy()
 
@@ -51,8 +76,11 @@ def split_attrs_labels(df):
     
     
 if __name__ == '__main__':
-    df = load_data('./data/test.csv')
-    df = normalise_data(df.iloc[0:25,:])
-    X, Y = split_attrs_labels(df)
+    df = load_data('./data/train.csv')
+    df = normalise_data(df)
+    batches = get_time_series_batches(df)
 
-    print(X, Y)
+    X, Y = split_attrs_labels(batches['2015'].get('02'))
+    print(X.shape, Y.shape)
+
+   
