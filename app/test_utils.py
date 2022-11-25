@@ -23,7 +23,7 @@ class TestUtils(unittest.TestCase):
         df = normalise_data(df)
         X, Y = split_attrs_labels(df)
         
-        self.assertEqual(X.shape, (9, 6))
+        self.assertEqual(X.shape, (9, 7))
         self.assertEqual(Y.shape, (9,1))
         self.assertNotIn(Y, X)        
 

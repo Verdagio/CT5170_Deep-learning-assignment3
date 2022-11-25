@@ -16,7 +16,7 @@ def load_data(filepath):
     return pd.read_csv(filepath)
 
 def normalise_data(df):
-    """Normalises data in the dataframe using a min-max feature scaling and Ordinal encoding
+    """Normalises data in the dataframe using a min-max feature scaling and one hot encoding for categorical column
 
     Args:
         df (Pandas.dataFrame): the dataFrame to be normalised
@@ -27,9 +27,16 @@ def normalise_data(df):
     for col in ['temperature','var1','pressure','windspeed']:
         df[col] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
     
+    # Do some nomalisation on the var2, it's some categorical data but we will add a col for each category deal with it in the future
     enc = LabelEncoder()
     df['var2'] = enc.fit_transform(df['var2'].values)
-    return df
+    var_2 = df.pop('var2')
+    one_hot_enc = (lambda x, tgt: (x == tgt)*1.0)
+
+    for l, n in zip(['A', 'B', 'C'], [0,1,2]):
+        df[l] = one_hot_enc(var_2, n)
+
+    return df[['ID','datetime','temperature','var1','pressure','windspeed','A','B','C','electricity_consumption']]
 
 def get_time_series_batches(df):
     """create time series batches
@@ -69,18 +76,18 @@ def split_attrs_labels(df):
     Returns:
         X, Y: returns result of sklearn.model_selection.train_test_split
     """
-    X = df.iloc[:,1:7].to_numpy()
-    Y = df.iloc[:,7:].to_numpy()
-
+    X = df.iloc[:,2:9].to_numpy()
+    Y = df.iloc[:,9:].to_numpy()
     return X, Y
     
     
 if __name__ == '__main__':
     df = load_data('./data/train.csv')
     df = normalise_data(df)
+    df.to_csv('./blah.csv')
     batches = get_time_series_batches(df)
 
     X, Y = split_attrs_labels(batches['2015'].get('02'))
-    print(X.shape, Y.shape)
+    # print(X, Y.shape)
 
    
