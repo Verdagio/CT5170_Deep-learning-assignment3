@@ -36,7 +36,11 @@ def normalise_data(df):
     for l, n in zip(['A', 'B', 'C'], [0,1,2]):
         df[l] = one_hot_enc(var_2, n)
 
-    return df[['ID','datetime','temperature','var1','pressure','windspeed','A','B','C','electricity_consumption']]
+    cols = ['ID','datetime','temperature','var1','pressure','windspeed','A','B','C']
+    if 'electricity_consumption' in df.columns:
+        cols.append('electricity_consumption')
+
+    return df[cols]
 
 def get_time_series_batches(df):
     """create time series batches
@@ -76,8 +80,8 @@ def split_attrs_labels(df):
     Returns:
         X, Y: returns result of sklearn.model_selection.train_test_split
     """
-    X = df.iloc[:,2:9].to_numpy()
-    Y = df.iloc[:,9:].to_numpy()
+    X = df.iloc[:,2:9].to_numpy().astype(np.float32)
+    Y = df.iloc[:,9:].to_numpy().astype(np.float32)
     return X, Y
     
     
