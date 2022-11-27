@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow import keras as kr
-from keras import layers
+import tensorflow_decision_forests as tfdf
 
 from utils import *
 
@@ -14,12 +14,18 @@ tf.random.set_seed(69)
 
 def create_model(input_shape: tuple):
     model = kr.Sequential([
-        layers.Dense(64, activation='relu', input_shape=input_shape),
-        layers.Dense(1)
+        kr.layers.Dense(64, activation='relu', input_shape=input_shape),
+        kr.layers.Dense(64, activation='relu')
+        kr.layers.Dense(1)
     ])
     # for our regression task we'll use mean square error loss fn, gradient descent for the optimiser, and Root Mean Squared Error + Mean Absolute Error for our metrics
     sgd_opt = tf.keras.optimizers.SGD()
     model.compile(loss='mean_absolute_error', optimizer=sgd_opt, metrics=["mean_squared_error", "mean_absolute_error"])
+    return model
+
+def create_random_forest_model():
+    model = tfdf.Keras.RandomForestModel(num_trees=1000)
+    model.compile(loss='mean_absolute_error', optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), metrics=["mean_squared_error", "mean_absolute_error"])
     return model
 
 def generate_md5s(batches):
@@ -50,3 +56,5 @@ if __name__ == '__main__':
     print(tf.__version__)
     model = create_model((9,))
     print(model.summary())
+    rf = create_random_forest_model()
+    print(rf.summary)

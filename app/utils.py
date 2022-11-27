@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from datetime import datetime
-import json
+import glob
+import os
 
 def load_data(filepath):
     """Loads in data from the filepath of a given csv
@@ -83,6 +84,10 @@ def split_attrs_labels(df):
     X = df.iloc[:,2:9].to_numpy().astype(np.float32)
     Y = df.iloc[:,9:].to_numpy().astype(np.float32)
     return X, Y
+
+# We definitely don't want to generate this every time so this is a work around to save 15 - 25 minutes at a time...
+def get_file_map():
+    return dict({'2013': {'07': './models/2013-07.h5', '08': './models/2013-08.h5', '09': './models/2013-09.h5', '10': './models/2013-10.h5', '11': './models/2013-11.h5', '12': './models/2013-12.h5'}, '2014': {'07': './models/2014-07.h5', '08': './models/2014-08.h5', '09': './models/2014-09.h5', '10': './models/2014-10.h5', '11': './models/2014-11.h5', '12': './models/2014-12.h5', '01': './models/2014-01.h5', '02': './models/2014-02.h5', '03': './models/2014-03.h5', '04': './models/2014-04.h5', '05': './models/2014-05.h5', '06': './models/2014-06.h5'}, '2015': {'07': './models/2015-07.h5', '08': './models/2015-08.h5', '09': './models/2015-09.h5', '10': './models/2015-10.h5', '11': './models/2015-11.h5', '12': './models/2015-12.h5', '01': './models/2015-01.h5', '02': './models/2015-02.h5', '03': './models/2015-03.h5', '04': './models/2015-04.h5', '05': './models/2015-05.h5', '06': './models/2015-06.h5'}, '2016': {'07': './models/2016-07.h5', '08': './models/2016-08.h5', '09': './models/2016-09.h5', '10': './models/2016-10.h5', '11': './models/2016-11.h5', '12': './models/2016-12.h5', '01': './models/2016-01.h5', '02': './models/2016-02.h5', '03': './models/2016-03.h5', '04': './models/2016-04.h5', '05': './models/2016-05.h5', '06': './models/2016-06.h5'}, '2017': {'01': './models/2017-01.h5', '02': './models/2017-02.h5', '03': './models/2017-03.h5', '04': './models/2017-04.h5', '05': './models/2017-05.h5', '06': './models/2017-06.h5'}})
     
     
 if __name__ == '__main__':
@@ -93,5 +98,7 @@ if __name__ == '__main__':
 
     X, Y = split_attrs_labels(batches['2015'].get('02'))
     # print(X, Y.shape)
+    fm = get_file_map('./app/models')
+    print(fm)
 
    
