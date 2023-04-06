@@ -35,10 +35,3 @@ In this dataset, one or more of the attributes e.g. var2 are categorical and oth
 Ordinal and One-Hot Encodings for Categorical Data, a blog post by Jason Brownlee (2020), https://machinelearningmastery.com/one-hot-encoding-for-categorical-data/
 Chapter 5  Encoding Categorical Predictors from the book  Feature Engineering and Selection: A Practical Approach for Predictive Models by Max Kuhn and Kjell Johnson (2019). Free HTML version available at  http://www.feat.engineering/encoding-categorical-predictors.html
 
-### Delete after completion
-
-Your report should not exceed ***four A4 pages*** in total. Therefore, take care to ensure that it is succinct and informative, and not overly superficial. This is an individual assignment. As you are all postgraduate students, I will treat any plagiarism (from another student or other sources) very seriously.
-
-First you must ***submit your report as a single PDF file in Blackboard***, on or before the due date. ***Ensure your name, class and student ID are on it***. Your assignment will be marked out of 10, with the breakdown shown above. If any aspect of your work is plagiarised or is otherwise dishonest, you will receive 0 for the full assignment.
-
-***Second, you need to upload your code to the code upload section on blackboard.***
